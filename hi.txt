@@ -5,7 +5,7 @@ next-code-elimination.vercel.app
 https://foursquare.com/
 
 
-
+52.3676,4.9041
   {
     fsq_id: '4c62703879d1e21e8613d615',
     categories: [ [Object], [Object] ],

@@ -4,11 +4,11 @@ import {bannerData} from "@data/index";
 import styles from "@styles/Home.module.css";
 import Image from "next/image"
 import {Card} from "../components/core";
-import {CoffeeStore, coffeeStores} from "@data/coffeeStores";
-import {GetStaticPropsContext, InferGetStaticPropsType} from "next";
+import {CoffeeStore} from "@data/coffeeStores";
+import {InferGetStaticPropsType} from "next";
 import {getCoffeeStores} from "@lib/coffeeStores";
 
-export async function getStaticProps({params}: GetStaticPropsContext) {
+export async function getStaticProps() {
     const data = await getCoffeeStores()
     const coffeeStores = data.results
 
