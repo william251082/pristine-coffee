@@ -5,8 +5,13 @@ import styles from "@styles/Home.module.css";
 import Image from "next/image"
 import {Card} from "../components/core";
 import {CoffeeStore, coffeeStores} from "@data/coffeeStores";
+import {InferGetStaticPropsType} from "next";
 
-export default function Home() {
+export async function getStaticProps() {
+    return {props: {coffeeStores}}
+}
+
+export default function Home({coffeeStores}: InferGetStaticPropsType<typeof getStaticProps>) {
     const handleOnBannerBtnClick = () => {
     };
     return (
