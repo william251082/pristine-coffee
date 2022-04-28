@@ -31,18 +31,23 @@ export default function Home({coffeeStores}: InferGetStaticPropsType<typeof getS
                         alt="hero image"
                     />
                 </div>
-                <div className={styles.cardLayout}>
-                    {coffeeStores.map((coffeeStore: CoffeeStore) => {
-                        return (
-                            <Card
-                                key={coffeeStore.id}
-                                name={coffeeStore.name}
-                                imgUrl={coffeeStore.imgUrl}
-                                href={`/coffee-store/${coffeeStore.id}`}
-                            />
-                        )
-                    })}
-                </div>
+                {coffeeStores.length > 0 && (
+                    <div className={styles.sectionWrapper}>
+                        <h2 className={styles.heading2}>Stores near me</h2>
+                        <div className={styles.cardLayout}>
+                            {coffeeStores.map((coffeeStore: CoffeeStore) => {
+                                return (
+                                    <Card
+                                        key={coffeeStore.id}
+                                        name={coffeeStore.name}
+                                        imgUrl={coffeeStore.imgUrl}
+                                        href={`/coffee-store/${coffeeStore.id}`}
+                                    />
+                                )
+                            })}
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     )
