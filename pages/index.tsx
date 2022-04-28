@@ -6,11 +6,15 @@ import Image from "next/image"
 import {Card} from "../components/core";
 import {CoffeeStore} from "@data/coffeeStores";
 import {InferGetStaticPropsType} from "next";
-import {getCoffeeStores} from "@lib/coffeeStores";
+import {getCoffeeStores, getCoffeeStoresPhotos} from "@lib/coffeeStores";
 
 export async function getStaticProps() {
     const data = await getCoffeeStores()
-    const coffeeStores = data.results
+    const stores = data.results
+    const photos: string[] = await getCoffeeStoresPhotos()
+    const coffeeStores = stores.map((venue: CoffeeStore, idx: number) => {
+        return {...venue, imgUrl: photos[idx]}
+    })
 
     return {props: {coffeeStores}}
 }
