@@ -1,11 +1,12 @@
 export interface CoffeeStore {
-    id: number
+    id: number | string
     fsq_id: string
     name: string
     imgUrl: string
     websiteUrl: string
     address: string
     neighbourhood: string
+    neighborhood: string
     timezone: string
     chains: string[]
     distance: number

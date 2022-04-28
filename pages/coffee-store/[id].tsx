@@ -6,25 +6,29 @@ import {GetStaticPropsContext} from "next";
 import Head from "next/head";
 import Image from "next/image"
 import cn from "classnames";
-import {getCoffeeStoreById, getCoffeeStores} from "@lib/coffeeStores";
+import {getCoffeeStores} from "@lib/coffeeStores";
 
 interface CoffeeStoreProps {
     coffeeStore: CoffeeStore
 }
 
-export async function getStaticProps({params}: GetStaticPropsContext) {
-    let coffeeStore = {}
-    if (typeof params?.id === 'string') {
-        coffeeStore = await getCoffeeStoreById(params.id)
+export async function getStaticProps(staticProps: GetStaticPropsContext) {
+    const params = staticProps.params;
+    const coffeeStores = await getCoffeeStores();
+    const findCoffeeStoreById = coffeeStores.find((coffeeStore: CoffeeStore) => {
+        return coffeeStore.id === params?.id
+    });
+    return {
+        props: {
+            coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {}
+        }
     }
-    return {props: {coffeeStore}}
 }
 
 export async function getStaticPaths() {
-    const data = await getCoffeeStores()
-    const coffeeStores = data.results
+    const coffeeStores = await getCoffeeStores()
     const paths = coffeeStores.map((coffeeStore: CoffeeStore) => {
-        return {params: {id: coffeeStore.fsq_id}}
+        return {params: {id: coffeeStore.id}}
     })
     return {paths, fallback: true}
 }
@@ -37,7 +41,7 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
     if (router.isFallback) {
         return <div>Loading...</div>
     }
-    const {location, name, imgUrl} = coffeeStore
+    const {address, name, neighbourhood, imgUrl} = coffeeStore
     return (
         <div className={styles.layout}>
             <Head>
@@ -71,9 +75,9 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
                             height="24"
                             alt="places icon"
                         />
-                        <p className={styles.text}>{location.address}</p>
+                        <p className={styles.text}>{address}</p>
                     </div>
-                    {location.neighborhood && (
+                    {neighbourhood && (
                         <div className={styles.iconWrapper}>
                             <Image
                                 src="/static/icons/nearMe.svg"
@@ -81,7 +85,7 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
                                 height="24"
                                 alt="near me icon"
                             />
-                            <p className={styles.text}>{location.neighborhood}</p>
+                            <p className={styles.text}>{neighbourhood}</p>
                         </div>
                     )}
                     <div className={styles.iconWrapper}>

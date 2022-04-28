@@ -1,4 +1,6 @@
 import { createApi } from "unsplash-js";
+import {getCoffeeStoresPhotos} from "@lib/coffeeStores";
+import {CoffeeStore} from "@data/coffeeStores";
 
 export const cardCount = 12
 
@@ -19,14 +21,16 @@ export async function fetchStores(latLong: string, limit: string, query: string)
     const apiKey = typeof process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY !== 'undefined' ? process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY : ''
     const headers: HeadersInit = {'Authorization': apiKey}
     const response = await fetch(`https://api.foursquare.com/v3/places/search?query=${query}&ll=${latLong}&limit=${limit}`, {headers})
-
-    return await response.json();
-}
-
-export async function fetchStoreById(id: string) {
-    const apiKey = typeof process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY !== 'undefined' ? process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY : ''
-    const headers: HeadersInit = {'Authorization': apiKey}
-    const response = await fetch(`https://api.foursquare.com/v3/places/${id}`, {headers})
-
-    return await response.json();
+    const data = await response.json()
+    const stores = data.results || []
+    const photos: string[] = await getCoffeeStoresPhotos()
+    return stores.map((venue: CoffeeStore, idx: number) => {
+        return {
+            id: venue.fsq_id,
+            address: venue.location.address || '',
+            name: venue.name,
+            neighbourhood: venue.location.neighborhood || '',
+            imgUrl: photos[idx]
+        }
+    })
 }
