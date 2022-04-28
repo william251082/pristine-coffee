@@ -2,3 +2,27 @@ https://icons8.com/
 https://meshgradient.com/
 https://hype4.academy/tools/glassmorphism-generator
 next-code-elimination.vercel.app
+https://foursquare.com/
+
+
+
+  {
+    fsq_id: '4c62703879d1e21e8613d615',
+    categories: [ [Object], [Object] ],
+    chains: [],
+    distance: 1187,
+    geocodes: { main: [Object], roof: [Object] },
+    link: '/v3/places/4c62703879d1e21e8613d615',
+    location: {
+      address: 'Langestraat 10B',
+      country: 'NL',
+      formatted_address: 'Langestraat 10B, 9671 PG Winschoten',
+      locality: 'Winschoten',
+      neighborhood: [Array],
+      postcode: '9671 PG',
+      region: 'Groningen'
+    },
+    name: "'t Stadshuys",
+    related_places: {},
+    timezone: 'Europe/Amsterdam'
+  },
