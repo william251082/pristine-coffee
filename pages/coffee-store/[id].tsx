@@ -6,7 +6,7 @@ import {GetStaticPropsContext} from "next";
 import Head from "next/head";
 import Image from "next/image"
 import cn from "classnames";
-import {getCoffeeStores} from "@lib/coffeeStores";
+import {defaultLatLong, getCoffeeStores} from "@lib/coffeeStores";
 
 interface CoffeeStoreProps {
     coffeeStore: CoffeeStore
@@ -14,7 +14,7 @@ interface CoffeeStoreProps {
 
 export async function getStaticProps(staticProps: GetStaticPropsContext) {
     const params = staticProps.params;
-    const coffeeStores = await getCoffeeStores();
+    const coffeeStores = await getCoffeeStores(defaultLatLong);
     const findCoffeeStoreById = coffeeStores.find((coffeeStore: CoffeeStore) => {
         return coffeeStore.id === params?.id
     });
@@ -26,7 +26,7 @@ export async function getStaticProps(staticProps: GetStaticPropsContext) {
 }
 
 export async function getStaticPaths() {
-    const coffeeStores = await getCoffeeStores()
+    const coffeeStores = await getCoffeeStores(defaultLatLong)
     const paths = coffeeStores.map((coffeeStore: CoffeeStore) => {
         return {params: {id: coffeeStore.id}}
     })
