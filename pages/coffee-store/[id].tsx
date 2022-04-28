@@ -30,10 +30,13 @@ export async function getStaticPaths() {
 
 const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
     const router = useRouter()
+    const handleUpvoteButton = () => {
+
+    }
     if (router.isFallback) {
         return <div>Loading...</div>
     }
-    const {address, name, imgUrl} = coffeeStore
+    const {address, name, neighbourhood, imgUrl} = coffeeStore
     return (
         <div className={styles.layout}>
             <Head>
@@ -69,6 +72,29 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
                         />
                         <p className={styles.text}>{address}</p>
                     </div>
+                    {neighbourhood && (
+                        <div className={styles.iconWrapper}>
+                            <Image
+                                src="/static/icons/nearMe.svg"
+                                width="24"
+                                height="24"
+                                alt="near me icon"
+                            />
+                            <p className={styles.text}>{neighbourhood}</p>
+                        </div>
+                    )}
+                    <div className={styles.iconWrapper}>
+                        <Image
+                            src="/static/icons/star.svg"
+                            width="24"
+                            height="24"
+                            alt="star icon"
+                        />
+                        <p className={styles.text}>votingCount</p>
+                    </div>
+                    <button className={styles.upvoteButton} onClick={handleUpvoteButton}>
+                        Up vote!
+                    </button>
                 </div>
             </div>
 
