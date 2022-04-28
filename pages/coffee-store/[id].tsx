@@ -3,6 +3,11 @@ import styles from "@styles/CoffeeStore.module.css"
 import Link from "next/link";
 import {CoffeeStore, coffeeStores} from "@data/coffeeStores";
 import {GetStaticPropsContext} from "next";
+import Head from "next/head";
+
+interface CoffeeStoreProps {
+    coffeeStore: CoffeeStore
+}
 
 export async function getStaticProps({params}: GetStaticPropsContext) {
     return {
@@ -15,27 +20,30 @@ export async function getStaticProps({params}: GetStaticPropsContext) {
 }
 
 export async function getStaticPaths() {
-    return {
-        paths: [
-            {params: {id: '0'}},
-            {params: {id: '1'}}
-        ],
-        fallback: true
-    }
+    const paths = coffeeStores.map((coffeeStore: CoffeeStore) => {
+        return {params: {id: coffeeStore.id.toString()}}
+    })
+    return {paths, fallback: true}
 }
 
-const CoffeeStore = (props: {coffeeStore: CoffeeStore}) => {
+const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
     const router = useRouter()
     if (router.isFallback) {
         return <div>Loading...</div>
     }
+    const {address, name, neighbourhood} = coffeeStore
     return (
         <div className={styles.layout}>
+            <Head>
+                <title>{name}</title>
+                <meta name="description" content={`${name} coffee store`} />
+            </Head>
             Coffee Store Page {router.query.id}
             <Link href="/"><a>Back to home</a></Link>
             <Link href="/coffee-store/dynamic"><a>Go to Page</a></Link>
-            <p>{props.coffeeStore.address}</p>
-            <p>{props.coffeeStore.name}</p>
+            <p>{address}</p>
+            <p>{name}</p>
+            <p>{neighbourhood}</p>
         </div>
     );
 };
