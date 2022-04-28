@@ -7,6 +7,7 @@ import {Card} from "../components/core";
 import {CoffeeStore} from "@data/coffeeStores";
 import {InferGetStaticPropsType} from "next";
 import {getCoffeeStores} from "@lib/coffeeStores";
+import useTrackLocation from "@hooks/useTrackLocation";
 
 export async function getStaticProps() {
     const coffeeStores = await getCoffeeStores()
@@ -14,8 +15,11 @@ export async function getStaticProps() {
 }
 
 export default function Home({coffeeStores}: InferGetStaticPropsType<typeof getStaticProps>) {
+    const {handleTrackLocation, locationErrorMsg, latLong, isFindingLocation} = useTrackLocation()
     const handleOnBannerBtnClick = () => {
-    };
+        handleTrackLocation()
+    }
+
     return (
         <div>
             <Head>
@@ -24,7 +28,11 @@ export default function Home({coffeeStores}: InferGetStaticPropsType<typeof getS
                 <meta name="description" content="allows you to discover coffee stores"/>
             </Head>
             <main className={styles.main}>
-                <Banner buttonText={bannerData.buttonText} handleOnCLick={handleOnBannerBtnClick} />
+                <Banner
+                    handleOnCLick={handleOnBannerBtnClick}
+                    buttonText={isFindingLocation ? "Locating..." : bannerData.buttonText}
+                />
+                {locationErrorMsg && <p>Something went wrong: {locationErrorMsg}</p>}
                 <div className={styles.heroImage}>
                     <Image
                         src="/static/hero-image.webp"
