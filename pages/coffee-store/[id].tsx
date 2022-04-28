@@ -3,7 +3,6 @@ import styles from "@styles/CoffeeStore.module.css"
 import Link from "next/link";
 import {CoffeeStore, coffeeStores} from "@data/coffeeStores";
 import {GetStaticPropsContext} from "next";
-import {FC, JSXElementConstructor, ReactElement, ReactFragment, ReactPortal} from "react";
 
 export async function getStaticProps({params}: GetStaticPropsContext) {
     return {
@@ -25,8 +24,11 @@ export async function getStaticPaths() {
     }
 }
 
-const CoffeeStore = (props: { coffeeStore: CoffeeStore}) => {
+const CoffeeStore = (props: {coffeeStore: CoffeeStore}) => {
     const router = useRouter()
+    if (router.isFallback) {
+        return <div>Loading...</div>
+    }
     return (
         <div className={styles.layout}>
             Coffee Store Page {router.query.id}
