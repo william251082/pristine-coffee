@@ -10,7 +10,9 @@ const Banner: FC<BannerProps> = ({buttonText, handleOnCLick}) => {
                 <span className={styles.title2}>Shops</span>
             </h1>
             <p className={styles.subTitle}>Discover Coffee Shops</p>
-            <button className={styles.button} onClick={handleOnCLick}>{buttonText}</button>
+            <div className={styles.buttonWrapper}>
+                <button className={styles.button} onClick={handleOnCLick}>{buttonText}</button>
+            </div>
         </div>
     )
 }
