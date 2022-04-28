@@ -7,9 +7,12 @@ import Head from "next/head";
 import Image from "next/image"
 import cn from "classnames";
 import {defaultLatLong, getCoffeeStores} from "@lib/coffeeStores";
+import {useContext, useEffect, useState} from "react";
+import {CoffeeStoreContext} from "@context/coffeeStoreContext";
+import {isEmpty} from "@utils/index";
 
 interface CoffeeStoreProps {
-    coffeeStore: CoffeeStore
+    coffeeShop: CoffeeStore
 }
 
 export async function getStaticProps(staticProps: GetStaticPropsContext) {
@@ -20,7 +23,7 @@ export async function getStaticProps(staticProps: GetStaticPropsContext) {
     });
     return {
         props: {
-            coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {}
+            coffeeShop: findCoffeeStoreById ? findCoffeeStoreById : {}
         }
     }
 }
@@ -33,7 +36,7 @@ export async function getStaticPaths() {
     return {paths, fallback: true}
 }
 
-const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
+const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
     const router = useRouter()
     const handleUpvoteButton = () => {
 
@@ -41,6 +44,23 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
     if (router.isFallback) {
         return <div>Loading...</div>
     }
+    const {id} = router.query
+    const [coffeeStore, setCoffeeStore] = useState(coffeeShop || {})
+    const {state:{coffeeStores}} = useContext(CoffeeStoreContext)
+
+    useEffect(() => {
+        if (isEmpty(coffeeShop)) {
+            if (coffeeStores.length > 0) {
+                const coffeeStoreFromContext = coffeeStores.find((coffeeStore: CoffeeStore) => {
+                    return coffeeStore.id.toString() === id
+                });
+                if (coffeeStoreFromContext) {
+                    setCoffeeStore(coffeeStoreFromContext)
+                }
+            }
+        }
+    }, [id])
+
     const {address, name, neighbourhood, imgUrl} = coffeeStore
     return (
         <div className={styles.layout}>
@@ -102,7 +122,6 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
                     </button>
                 </div>
             </div>
-
         </div>
     );
 };
