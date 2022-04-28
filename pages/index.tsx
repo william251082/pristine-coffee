@@ -8,7 +8,8 @@ import {CoffeeStore} from "@data/coffeeStores";
 import {InferGetStaticPropsType} from "next";
 import {defaultLatLong, getCoffeeStores} from "@lib/coffeeStores";
 import useTrackLocation from "@hooks/useTrackLocation";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
+import {CoffeeActionType, CoffeeStoreContext} from "@context/coffeeStoreContext";
 
 export async function getStaticProps() {
     const stores = await getCoffeeStores(defaultLatLong)
@@ -16,9 +17,10 @@ export async function getStaticProps() {
 }
 
 export default function Home({stores}: InferGetStaticPropsType<typeof getStaticProps>) {
-    const [coffeeStores, setCoffeeStores] = useState([])
     const [coffeeStoresError, setCoffeeStoresError] = useState('')
-    const {handleTrackLocation, locationErrorMsg, latLong, isFindingLocation} = useTrackLocation()
+    const {handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation()
+    const {dispatch, state} = useContext(CoffeeStoreContext)
+    const {coffeeStores, latLong} = state
     const handleOnBannerBtnClick = () => {
         handleTrackLocation()
     }
@@ -27,7 +29,11 @@ export default function Home({stores}: InferGetStaticPropsType<typeof getStaticP
             if (latLong) {
                 try {
                     const coffeeStores = await getCoffeeStores(latLong)
-                    setCoffeeStores(coffeeStores)
+                    dispatch({
+                        type: CoffeeActionType.SET_COFFEE_STORES,
+                        payload: {coffeeStores},
+                    });
+                    setCoffeeStoresError("")
                 } catch (err: unknown) {
                     console.error('Error retrieving coffee stores.', err)
                     setCoffeeStoresError(JSON.stringify(err))

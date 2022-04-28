@@ -1,4 +1,5 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {CoffeeActionType, CoffeeStoreContext} from "@context/coffeeStoreContext";
 
 interface Position {
     coords: Coords
@@ -12,10 +13,14 @@ const useTrackLocation = () => {
     const [locationErrorMsg, setLocationErrorMsg] = useState('')
     const [latLong, setLatLong] = useState('')
     const [isFindingLocation, setIsFindingLocation] = useState(false)
+    const {dispatch} = useContext(CoffeeStoreContext)
     const success = (position: Position) => {
         const latitude = position.coords.latitude
         const longitude = position.coords.longitude
-        setLatLong(`${latitude},${longitude}`)
+        dispatch({
+            type: CoffeeActionType.SET_LAT_LONG,
+            payload: { latLong: `${latitude},${longitude}` },
+        })
         setIsFindingLocation(false)
     }
     const error = () => {
