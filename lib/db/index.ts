@@ -9,7 +9,7 @@ export async function fetchStores(latLong: string, limit: string, query: string)
 export async function fetchStoreById(id: string) {
     const apiKey = typeof process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY !== 'undefined' ? process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY : ''
     const headers: HeadersInit = {'Authorization': apiKey}
-    const response = await fetch(`https://api.foursquare.com/v3/places${id}`, {headers})
+    const response = await fetch(`https://api.foursquare.com/v3/places/${id}`, {headers})
 
     return await response.json();
 }

@@ -14,8 +14,8 @@ interface CoffeeStoreProps {
 
 export async function getStaticProps({params}: GetStaticPropsContext) {
     let coffeeStore = {}
-    if (typeof params?.fsq_id === 'string') {
-        coffeeStore = await getCoffeeStoreById(params.fsq_id)
+    if (typeof params?.id === 'string') {
+        coffeeStore = await getCoffeeStoreById(params.id)
     }
     return {props: {coffeeStore}}
 }
@@ -37,7 +37,7 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
     if (router.isFallback) {
         return <div>Loading...</div>
     }
-    const {address, name, neighbourhood, imgUrl} = coffeeStore
+    const {location, name, imgUrl} = coffeeStore
     return (
         <div className={styles.layout}>
             <Head>
@@ -71,9 +71,9 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
                             height="24"
                             alt="places icon"
                         />
-                        <p className={styles.text}>{address}</p>
+                        <p className={styles.text}>{location.address}</p>
                     </div>
-                    {neighbourhood && (
+                    {location.neighborhood && (
                         <div className={styles.iconWrapper}>
                             <Image
                                 src="/static/icons/nearMe.svg"
@@ -81,7 +81,7 @@ const CoffeeStore = ({coffeeStore}: CoffeeStoreProps) => {
                                 height="24"
                                 alt="near me icon"
                             />
-                            <p className={styles.text}>{neighbourhood}</p>
+                            <p className={styles.text}>{location.neighborhood}</p>
                         </div>
                     )}
                     <div className={styles.iconWrapper}>
