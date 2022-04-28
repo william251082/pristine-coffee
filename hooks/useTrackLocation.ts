@@ -11,7 +11,6 @@ interface Coords {
 
 const useTrackLocation = () => {
     const [locationErrorMsg, setLocationErrorMsg] = useState('')
-    const [latLong, setLatLong] = useState('')
     const [isFindingLocation, setIsFindingLocation] = useState(false)
     const {dispatch} = useContext(CoffeeStoreContext)
     const success = (position: Position) => {
@@ -36,7 +35,7 @@ const useTrackLocation = () => {
             navigator.geolocation.getCurrentPosition(success, error)
         }
     }
-    return {latLong, locationErrorMsg, handleTrackLocation, isFindingLocation}
+    return {locationErrorMsg, handleTrackLocation, isFindingLocation}
 }
 
 export default useTrackLocation
