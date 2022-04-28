@@ -1,5 +1,6 @@
 export interface CoffeeStore {
   id: number
+  fsq_id: string
   name: string
   imgUrl: string
   websiteUrl: string

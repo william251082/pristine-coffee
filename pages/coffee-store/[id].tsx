@@ -1,29 +1,30 @@
 import {useRouter} from "next/router"
 import styles from "@styles/CoffeeStore.module.css"
 import Link from "next/link";
-import {CoffeeStore, coffeeStores} from "@data/coffeeStores";
+import {CoffeeStore} from "@data/coffeeStores";
 import {GetStaticPropsContext} from "next";
 import Head from "next/head";
 import Image from "next/image"
 import cn from "classnames";
+import {getCoffeeStoreById, getCoffeeStores} from "@lib/coffeeStores";
 
 interface CoffeeStoreProps {
     coffeeStore: CoffeeStore
 }
 
 export async function getStaticProps({params}: GetStaticPropsContext) {
-    return {
-        props: {
-            coffeeStore: coffeeStores.find((coffeeStore: CoffeeStore) => {
-                return coffeeStore.id.toString() === params?.id
-            })
-        }
+    let coffeeStore = {}
+    if (typeof params?.fsq_id === 'string') {
+        coffeeStore = await getCoffeeStoreById(params.fsq_id)
     }
+    return {props: {coffeeStore}}
 }
 
 export async function getStaticPaths() {
+    const data = await getCoffeeStores()
+    const coffeeStores = data.results
     const paths = coffeeStores.map((coffeeStore: CoffeeStore) => {
-        return {params: {id: coffeeStore.id.toString()}}
+        return {params: {id: coffeeStore.fsq_id}}
     })
     return {paths, fallback: true}
 }
