@@ -1,9 +1,10 @@
 import Head from 'next/head';
 import {Banner} from "@components/core";
-import {bannerData, cardData} from "@data/index";
+import {bannerData} from "@data/index";
 import styles from "@styles/Home.module.css";
 import Image from "next/image"
 import {Card} from "../components/core";
+import {CoffeeStore, coffeeStores} from "@data/coffeeStores";
 
 export default function Home() {
     const handleOnBannerBtnClick = () => {
@@ -25,7 +26,18 @@ export default function Home() {
                         alt="hero image"
                     />
                 </div>
-                <Card name={cardData.name} imgUrl={cardData.imgUrl} href={cardData.href} />
+                <div className={styles.cardLayout}>
+                    {coffeeStores.map((coffeeStore: CoffeeStore) => {
+                        return (
+                            <Card
+                                key={coffeeStore.id}
+                                name={coffeeStore.name}
+                                imgUrl={coffeeStore.imgUrl}
+                                href={`/coffee-store/${coffeeStore.id}`}
+                            />
+                        )
+                    })}
+                </div>
             </main>
         </div>
     )
