@@ -8,9 +8,10 @@ import {CoffeeStore} from "@data/coffeeStores";
 import {InferGetStaticPropsType} from "next";
 import {getCoffeeStores} from "@lib/coffeeStores";
 import useTrackLocation from "@hooks/useTrackLocation";
+import {useEffect} from "react";
 
 export async function getStaticProps() {
-    const coffeeStores = await getCoffeeStores()
+    const coffeeStores = await getCoffeeStores('52.3676,4.9041')
     return {props: {coffeeStores}}
 }
 
@@ -19,6 +20,18 @@ export default function Home({coffeeStores}: InferGetStaticPropsType<typeof getS
     const handleOnBannerBtnClick = () => {
         handleTrackLocation()
     }
+    useEffect(() => {
+        const handleCoffeeStores = async () => {
+            if (latLong) {
+                try {
+                    const coffeeStores = await getCoffeeStores(latLong)
+                } catch (err) {
+                    console.error('Error retrieving coffee stores.', err)
+                }
+            }
+        }
+        handleCoffeeStores().catch(console.error)
+    }, [latLong])
 
     return (
         <div>
