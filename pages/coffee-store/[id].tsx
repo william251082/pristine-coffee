@@ -69,7 +69,7 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
             console.error("Error creating coffee store", err)
         }
     }
-    useEffect(() => {
+    const createCoffeeShop = () => {
         if (isEmpty(coffeeShop)) {
             if (coffeeStores.length > 0) {
                 const coffeeStoreFromContext = coffeeStores.find((coffeeStore: CoffeeStore) => {
@@ -83,7 +83,10 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
         } else {
             handleCreateCoffeeStore(coffeeShop).catch((err) => console.error(err))
         }
-    }, [id, coffeeShop, coffeeStores])
+    }
+    useEffect(() => {
+        createCoffeeShop()
+    }, [])
     const {address, name, neighbourhood, imgUrl} = coffeeStore
     return (
         <div className={styles.layout}>

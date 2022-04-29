@@ -29,7 +29,7 @@ export async function fetchStores(latLong: string, limit: string, query: string)
             id: venue.fsq_id,
             address: venue.location.address || '',
             name: venue.name,
-            neighbourhood: String(venue.location.neighborhood) || '',
+            neighbourhood: String(venue.location.neighborhood) !== 'undefined' ? String(venue.location.neighborhood) : '',
             imgUrl: photos[idx]
         }
     })
