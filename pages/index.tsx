@@ -6,13 +6,13 @@ import Image from "next/image"
 import {Card} from "../components/core";
 import {CoffeeStore} from "@data/coffeeStores";
 import {InferGetStaticPropsType} from "next";
-import {defaultLatLong, getCoffeeStores} from "@lib/coffeeStores";
+import {getCoffeeStores} from "@lib/coffeeStores";
 import useTrackLocation from "@hooks/useTrackLocation";
 import {useContext, useEffect, useState} from "react";
 import {CoffeeActionType, CoffeeStoreContext} from "@context/coffeeStoreContext";
 
 export async function getStaticProps() {
-    const stores = await getCoffeeStores(defaultLatLong)
+    const stores = await getCoffeeStores()
     return {props: {stores}}
 }
 
