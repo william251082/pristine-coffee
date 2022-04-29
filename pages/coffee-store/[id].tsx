@@ -7,9 +7,10 @@ import Head from "next/head";
 import Image from "next/image"
 import cn from "classnames";
 import {getCoffeeStores} from "@lib/coffeeStores";
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {CoffeeStoreContext} from "@context/coffeeStoreContext";
-import {isEmpty} from "@utils/index";
+import {fetcher, isEmpty} from "@utils/index";
+import useSWR from "swr"
 
 interface CoffeeStoreProps {
     coffeeShop: CoffeeStore
@@ -38,13 +39,41 @@ export async function getStaticPaths() {
 
 const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
     const router = useRouter()
-    const handleUpvoteButton = () => {
-
+    const {id} = router.query
+    const {data, error} = useSWR(`/api/getCoffeeStoreById?id=${id}`, fetcher)
+    useEffect(() => {
+        if (data && data.length > 0) {
+            setCoffeeStore(data[0]);
+            setVotingCount(data[0].voting)
+        }
+    }, [data])
+    const [votingCount, setVotingCount] = useState(0)
+    const handleUpvoteButton = async () => {
+        try {
+            const response = await fetch("/api/favouriteCoffeeStoreById", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id,
+                }),
+            });
+            const dbCoffeeStore = await response.json();
+            if (dbCoffeeStore && dbCoffeeStore.length > 0) {
+                let count = votingCount + 1
+                setVotingCount(count)
+            }
+        } catch (err) {
+            console.error("Error voting on the coffee store", err)
+        }
     }
     if (router.isFallback) {
         return <div>Loading...</div>
     }
-    const {id} = router.query
+    if (error) {
+        return <div>Something went wrong retrieving coffee store page</div>
+    }
     const [coffeeStore, setCoffeeStore] = useState(coffeeShop || {})
     const {state:{coffeeStores}} = useContext(CoffeeStoreContext)
     const handleCreateCoffeeStore = async (coffeeStore: CoffeeStore) => {
@@ -69,7 +98,7 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
             console.error("Error creating coffee store", err)
         }
     }
-    const createCoffeeShop = () => {
+    const createCoffeeShop = useCallback(() => {
         if (isEmpty(coffeeShop)) {
             if (coffeeStores.length > 0) {
                 const coffeeStoreFromContext = coffeeStores.find((coffeeStore: CoffeeStore) => {
@@ -83,10 +112,10 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
         } else {
             handleCreateCoffeeStore(coffeeShop).catch((err) => console.error(err))
         }
-    }
+    }, [id, coffeeShop, coffeeStores])
     useEffect(() => {
         createCoffeeShop()
-    }, [])
+    }, [createCoffeeShop])
     const {address, name, neighbourhood, imgUrl} = coffeeStore
     return (
         <div className={styles.layout}>
@@ -141,7 +170,7 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
                             height="24"
                             alt="star icon"
                         />
-                        <p className={styles.text}>votingCount</p>
+                        <p className={styles.text}>{votingCount}</p>
                     </div>
                     <button className={styles.upvoteButton} onClick={handleUpvoteButton}>
                         Up vote!

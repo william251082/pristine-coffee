@@ -6,10 +6,15 @@ Airtable.configure({
 const base = Airtable.base(process.env.NEXT_PUBLIC_AIRTABLE_BASE_KEY)
 const table = base("coffee_store")
 
+const getMinifiedRecord = (record: Record<any, any>) => {
+    return {
+        recordId: record.id,
+        ...record.fields
+    }
+}
+
 const getMinifiedRecords = (records: Record<any, any>[]) => {
-    return records.map((record: Record<any, any>) => {
-        return {...record.fields}
-    })
+    return records.map((record: Record<any, any>) => getMinifiedRecord(record))
 }
 const findRecordByFilter = async (id: string) => {
     const findCoffeeStoreRecords = await table
