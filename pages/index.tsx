@@ -10,6 +10,7 @@ import {getCoffeeStores} from "@lib/coffeeStores";
 import useTrackLocation from "@hooks/useTrackLocation";
 import {useContext, useEffect, useState} from "react";
 import {CoffeeActionType, CoffeeStoreContext} from "@context/coffeeStoreContext";
+import {cardCount} from "@lib/db";
 
 export async function getStaticProps() {
     const stores = await getCoffeeStores()
@@ -28,7 +29,10 @@ export default function Home({stores}: InferGetStaticPropsType<typeof getStaticP
         const handleCoffeeStores = async () => {
             if (latLong) {
                 try {
-                    const coffeeStores = await getCoffeeStores(latLong)
+                    const response = await fetch(
+                        `/api/getCoffeeStoresByLocation?latLong=${latLong}&limit=${cardCount.toString()}`
+                    )
+                    const coffeeStores = await response.json()
                     dispatch({
                         type: CoffeeActionType.SET_COFFEE_STORES,
                         payload: {coffeeStores},
