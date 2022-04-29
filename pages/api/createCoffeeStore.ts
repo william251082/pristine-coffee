@@ -1,19 +1,14 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {CreateCoffeeStoreResponse} from "@pages/api/types";
-import {table} from "@lib/airtable";
+import {findRecordByFilter, getMinifiedRecords, table} from "@lib/airtable";
 
 const createCoffeeStore = async (req:NextApiRequest, res: NextApiResponse<CreateCoffeeStoreResponse>) => {
     if (req.method === "POST") {
         const {id, name, neighbourhood, address, imgUrl, voting} = req.body
         try {
             if (id) {
-                const findCoffeeStoreRecords = await table.select({
-                    filterByFormula: `id=${id}`
-                }).firstPage()
-                if (findCoffeeStoreRecords.length > 0) {
-                    const records = findCoffeeStoreRecords.map((record: Record<any, any>) => {
-                        return {...record.fields}
-                    })
+                const records = await findRecordByFilter(id)
+                if (records.length > 0) {
                     res.json(records)
                 } else {
                     if (name) {
@@ -29,6 +24,7 @@ const createCoffeeStore = async (req:NextApiRequest, res: NextApiResponse<Create
                                 },
                             },
                         ])
+                        const records = getMinifiedRecords(createRecords)
                         res.json(createRecords)
                     } else {
                         res.status(400)
