@@ -20,7 +20,7 @@ export async function getStaticProps(staticProps: GetStaticPropsContext) {
     const coffeeStores = await getCoffeeStores();
     const findCoffeeStoreById = coffeeStores.find((coffeeStore: CoffeeStore) => {
         return coffeeStore.id === params?.id
-    });
+    })
     return {
         props: {
             coffeeShop: findCoffeeStoreById ? findCoffeeStoreById : {}
@@ -69,7 +69,6 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
             console.error("Error creating coffee store", err)
         }
     }
-
     useEffect(() => {
         if (isEmpty(coffeeShop)) {
             if (coffeeStores.length > 0) {
@@ -81,9 +80,10 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
                     handleCreateCoffeeStore(coffeeStoreFromContext).catch((err) => console.error(err))
                 }
             }
+        } else {
+            handleCreateCoffeeStore(coffeeShop).catch((err) => console.error(err))
         }
-    }, [id])
-
+    }, [id, coffeeShop, coffeeStores])
     const {address, name, neighbourhood, imgUrl} = coffeeStore
     return (
         <div className={styles.layout}>

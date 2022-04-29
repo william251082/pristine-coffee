@@ -1,5 +1,7 @@
-export const isEmpty = (obj: object) => {
-  return obj && Object.keys(obj).length === 0;
-};
+const isEmpty = (obj: object) => {
+    return obj && Object.keys(obj).length === 0
+}
 
-export const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
+export {isEmpty, fetcher}
