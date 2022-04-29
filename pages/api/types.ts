@@ -4,6 +4,9 @@ export interface CoffeeStoresByLocationResponse {
     message: string
     err: unknown
 }
+export interface CreateCoffeeStoreResponse {
+    [k: string]: any
+}
 export interface ResponseError {
     message: string
 }
