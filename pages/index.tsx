@@ -45,7 +45,7 @@ export default function Home({stores}: InferGetStaticPropsType<typeof getStaticP
             }
         }
         handleCoffeeStores().catch(console.error)
-    }, [latLong])
+    }, [latLong, dispatch])
 
     return (
         <div>

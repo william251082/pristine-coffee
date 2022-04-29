@@ -68,32 +68,28 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
             console.error("Error voting on the coffee store", err)
         }
     }
-    if (router.isFallback) {
-        return <div>Loading...</div>
-    }
-    if (error) {
-        return <div>Something went wrong retrieving coffee store page</div>
-    }
     const [coffeeStore, setCoffeeStore] = useState(coffeeShop || {})
     const {state:{coffeeStores}} = useContext(CoffeeStoreContext)
     const handleCreateCoffeeStore = async (coffeeStore: CoffeeStore) => {
         try {
-            const { id, name, voting, imgUrl, neighbourhood, address } = coffeeStore
-            const response = await fetch("/api/createCoffeeStore", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id,
-                    name,
-                    voting: 0,
-                    imgUrl,
-                    neighbourhood: neighbourhood || "",
-                    address: address || ""
+            if (coffeeStore) {
+                const { id, name, imgUrl, neighbourhood, address } = coffeeStore
+                const response = await fetch("/api/createCoffeeStore", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id,
+                        name,
+                        voting: 0,
+                        imgUrl,
+                        neighbourhood: neighbourhood || "",
+                        address: address || ""
+                    })
                 })
-            })
-            await response.json()
+                await response.json()
+            }
         } catch (err) {
             console.error("Error creating coffee store", err)
         }
@@ -117,6 +113,12 @@ const CoffeeStore = ({coffeeShop}: CoffeeStoreProps) => {
         createCoffeeShop()
     }, [createCoffeeShop])
     const {address, name, neighbourhood, imgUrl} = coffeeStore
+    if (router.isFallback) {
+        return <div>Loading...</div>
+    }
+    if (error) {
+        return <div>Something went wrong retrieving coffee store page</div>
+    }
     return (
         <div className={styles.layout}>
             <Head>
