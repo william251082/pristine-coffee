@@ -7,7 +7,7 @@ const createCoffeeStore = async (req:NextApiRequest, res: NextApiResponse<Create
         const {id, name, neighbourhood, address, imgUrl, voting} = req.body
         try {
             const findCoffeeStoreRecords = await table.select({
-                filterByFormula: 'id="0"'
+                filterByFormula: 'id="1"'
             }).firstPage()
             if (findCoffeeStoreRecords.length > 0) {
                 const records = findCoffeeStoreRecords.map((record: Record<any, any>) => {
@@ -15,7 +15,19 @@ const createCoffeeStore = async (req:NextApiRequest, res: NextApiResponse<Create
                 })
                 res.json(records)
             } else {
-                //create a record
+                const createRecords = await table.create([
+                    {
+                        fields: {
+                            id,
+                            name,
+                            address,
+                            neighbourhood,
+                            voting,
+                            imgUrl,
+                        },
+                    },
+                ])
+                res.json(createRecords);
             }
         } catch (err) {
             console.error("Error creating or finding a store", err)
