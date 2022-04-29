@@ -10,7 +10,10 @@ const createCoffeeStore = async (req:NextApiRequest, res: NextApiResponse<Create
                 filterByFormula: 'id="0"'
             }).firstPage()
             if (findCoffeeStoreRecords.length > 0) {
-                res.json(findCoffeeStoreRecords)
+                const records = findCoffeeStoreRecords.map((record: Record<any, any>) => {
+                    return {...record.fields}
+                })
+                res.json(records)
             } else {
                 //create a record
             }
