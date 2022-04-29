@@ -21,4 +21,5 @@ export interface CoffeeStore {
         postcode: string
         region: string
     }
+    voting: number
 }
